@@ -1,3 +1,8 @@
+# Prototipo de URL Shortener
+"""
+Este prototipo busca demostrar la capacidad de crear un API que acorte URLs, es importante mencionar que en un entorno de la vida real este se debe hacer en una base de datos real considerando los atributos necesarios para guardar la url original, la url destino y la cantidad de visitas y otras métricas.
+"""
+
 import uvicorn
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
