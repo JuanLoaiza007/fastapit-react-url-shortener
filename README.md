@@ -7,7 +7,7 @@ This implementation uses an **in-memory database** (a Python dictionary), this m
 ## 🏛️ Technology Stack
 
 - **Backend:** FastAPI, Uvicorn
-- **Frontend:** React 18, Vite
+- **Frontend:** React 18, Vite, Recharts (for charts)
 - **Database:** In-memory Python dictionary (for development)
 
 ## ✨ Features
@@ -17,6 +17,8 @@ This implementation uses an **in-memory database** (a Python dictionary), this m
 - **Update links:** Change the destination URL of an existing short link.
 - **View all links:** A simple list view of all active short codes.
 - **Redirect:** The main `GET /{short_code}` route handles the redirection.
+- **Track visits:** Automatically counts daily visits for each URL.
+- **Weekly statistics:** View usage charts showing visits per day for the current week (Monday to Sunday).
 
 ## 🚀 Getting Started
 
@@ -34,7 +36,8 @@ You need two separate terminals to run the project, one for the backend and one 
 2.  **Create and activate a virtual environment**
 
     ```bash
-    cd fastapit-react-url-shortener/
+    # Assuming you are in the root directory "fastapit-react-url-shortener"
+    cd backend
     # Create
     python -m venv venv
 
@@ -45,7 +48,7 @@ You need two separate terminals to run the project, one for the backend and one 
 3.  **Install dependencies**
 
     ```bash
-    pip install fastapi uvicorn
+    pip install -r requirements.txt
     ```
 
 4.  **Run the server**
@@ -63,7 +66,7 @@ You need two separate terminals to run the project, one for the backend and one 
 
     ```bash
     # Assuming you are in the root directory
-    cd frontend-folder
+    cd frontend
     ```
 
 2.  **Install dependencies**
@@ -97,4 +100,9 @@ A brief overview of the available API routes:
   - Body: `{ "long_url": "..." }`
 
 - `GET /{short_code}`
-  - Performs the `HTTP 307` redirect to the long URL.
+
+  - Performs the `HTTP 307` redirect to the long URL and tracks the visit.
+
+- `GET /stats/weekly`
+  - Returns weekly usage statistics for all URLs (Monday to Sunday).
+  - Response: Array of objects with `short_code` and `weekly_data` (dict of date: count).

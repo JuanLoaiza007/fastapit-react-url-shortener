@@ -22,7 +22,6 @@ function App() {
   const [editingUrl, setEditingUrl] = useState("");
 
   const [weeklyStats, setWeeklyStats] = useState([]);
-  const [selectedUrl, setSelectedUrl] = useState(null);
 
   const fetchLinks = async () => {
     try {
@@ -138,41 +137,9 @@ function App() {
 
   return (
     <main className="container">
-      <header>
-        <h1>Acortador de URLs</h1>
-      </header>
-
-      <section className="form-section">
-        <h2>Crear nuevo enlace</h2>
-        <form onSubmit={handleCreateLink}>
-          <div className="form-group">
-            <label htmlFor="longUrl">URL Larga:</label>
-            <input
-              id="longUrl"
-              type="url"
-              value={newLongUrl}
-              onChange={(e) => setNewLongUrl(e.target.value)}
-              placeholder="https://mi-url-larga.com/..."
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="shortCode">Alias (Opcional):</label>
-            <input
-              id="shortCode"
-              type="text"
-              value={customShortCode}
-              onChange={(e) => setCustomShortCode(e.target.value)}
-              placeholder="mi-alias-genial"
-            />
-          </div>
-          <button type="submit">Acortar</button>
-        </form>
-      </section>
-
-      <section className="links-section">
+      <div className="card links-card">
         <h2>Enlaces existentes</h2>
-        <ul>
+        <ul className="links-list">
           {links.map((link) => (
             <li key={link.short_code}>
               {editingCode === link.short_code ? (
@@ -212,12 +179,40 @@ function App() {
             </li>
           ))}
         </ul>
-      </section>
+      </div>
 
-      <section className="stats-section">
+      <div className="card form-card">
+        <h2>Crear nuevo enlace</h2>
+        <form onSubmit={handleCreateLink}>
+          <div className="form-group">
+            <label htmlFor="longUrl">URL Larga:</label>
+            <input
+              id="longUrl"
+              type="url"
+              value={newLongUrl}
+              onChange={(e) => setNewLongUrl(e.target.value)}
+              placeholder="https://mi-url-larga.com/..."
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="shortCode">Alias (Opcional):</label>
+            <input
+              id="shortCode"
+              type="text"
+              value={customShortCode}
+              onChange={(e) => setCustomShortCode(e.target.value)}
+              placeholder="mi-alias-genial"
+            />
+          </div>
+          <button type="submit">Acortar</button>
+        </form>
+      </div>
+
+      <div className="card stats-card">
         <h2>Estadísticas de Uso Semanal</h2>
         {chartData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
@@ -238,7 +233,7 @@ function App() {
         ) : (
           <p>No hay datos de estadísticas disponibles.</p>
         )}
-      </section>
+      </div>
     </main>
   );
 }
