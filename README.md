@@ -27,14 +27,14 @@ You need two separate terminals to run the project, one for the backend and one 
 1.  **Clone the repository**
 
     ```bash
-    # Replace with your repo URL
-    git clone [https://github.com/JuanLoaiza007/fastapi-react-shortener.git](https://github.com/JuanLoaiza007/fastapi-react-shortener.git)
-    cd fastapi-react-shortener/backend-folder
+    git clone https://github.com/JuanLoaiza007/fastapit-react-url-shortener.git
+
     ```
 
 2.  **Create and activate a virtual environment**
 
     ```bash
+    cd fastapit-react-url-shortener/
     # Create
     python -m venv venv
 

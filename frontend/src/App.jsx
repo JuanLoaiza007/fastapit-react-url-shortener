@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const API_BASE_URL = "http://127.0.0.1:8000";
 
@@ -11,6 +21,9 @@ function App() {
   const [editingCode, setEditingCode] = useState(null);
   const [editingUrl, setEditingUrl] = useState("");
 
+  const [weeklyStats, setWeeklyStats] = useState([]);
+  const [selectedUrl, setSelectedUrl] = useState(null);
+
   const fetchLinks = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/links`);
@@ -21,8 +34,19 @@ function App() {
     }
   };
 
+  const fetchWeeklyStats = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/stats/weekly`);
+      const data = await response.json();
+      setWeeklyStats(data);
+    } catch (error) {
+      console.error("Failed to fetch weekly stats:", error);
+    }
+  };
+
   useEffect(() => {
     fetchLinks();
+    fetchWeeklyStats();
   }, []);
 
   const handleCreateLink = async (event) => {
@@ -86,6 +110,31 @@ function App() {
   const getFullShortUrl = (shortCode) => {
     return `${API_BASE_URL}/${shortCode}`;
   };
+
+  const prepareChartData = (stats) => {
+    if (!stats || stats.length === 0) return [];
+
+    const daysOfWeek = [
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+      "Domingo",
+    ];
+    const dates = Object.keys(stats[0].weekly_data).sort();
+
+    return dates.map((date, index) => {
+      const dataPoint = { name: daysOfWeek[index] };
+      stats.forEach((stat) => {
+        dataPoint[stat.short_code] = stat.weekly_data[date] || 0;
+      });
+      return dataPoint;
+    });
+  };
+
+  const chartData = prepareChartData(weeklyStats);
 
   return (
     <main className="container">
@@ -163,6 +212,32 @@ function App() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="stats-section">
+        <h2>Estadísticas de Uso Semanal</h2>
+        {chartData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {weeklyStats.map((stat, index) => (
+                <Line
+                  key={stat.short_code}
+                  type="monotone"
+                  dataKey={stat.short_code}
+                  stroke={`hsl(${(index * 137.5) % 360}, 70%, 50%)`}
+                  strokeWidth={2}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <p>No hay datos de estadísticas disponibles.</p>
+        )}
       </section>
     </main>
   );
